@@ -219,7 +219,8 @@ class Settings(BaseSettings):
        return value
 ```
 Fill the `validate_environment` function, checking the parsed environment value. It should be one
-of: "dev", "test", "prod". If it's alright, return it, otherwise raise `ValidationError`. Use the
+of: "dev", "test", "prod". If it's alright, return it, otherwise raise `ValueError`. Pydantic will
+detect this and raise `ValidationError` with readable message. Use the
 [documentation examples](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) as necessary.
 
 3. `.env` (read: "dotenv") is a very simple format for configuration files, popular for creating
