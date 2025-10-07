@@ -7,8 +7,8 @@ introduce best practices and basic tools that are used throughout any MLOps proj
 you will have local server providing ML model predictions.
 
 We will cover:
-1. Dependency management
-2. Code versioning and Git
+1. Code versioning and Git
+2. Dependency management
 3. Pre-commit hooks
 4. Configuration, environment variables management
 5. Secrets management
@@ -24,71 +24,7 @@ Instructions:
 
 ---
 
-## 1. Dependency management (0.5 points)
-
-Dependency management is an important aspect of software development. 
-It helps you manage the project dependencies, set constraints on allowed library versions,
-update them in a controlled way, and ensures that the application runs smoothly across
-different environments.
-
-`uv` is an extremely fast Python dependency and project manager, written in Rust.
-It allows you to switch between Python versions, resolve and pin dependencies, and install them
-blazingly fast. If you don't have it installed yet, follow [the official documentation](https://docs.astral.sh/uv/)
-for your operating systems.
-
-Verify the installation by running:
-```bash
-uv --version
-```
-
-Let's check the available python versions and implementations that can be installed using `uv`:
-```bash
-uv python list --all-platforms
-```
-
-As you can see, there is pretty long list of available python versions. `uv` is mostly concerned
-with CPython, the official implementation written in C. Alternatives include e.g.:
-- Cython, with custom compiled extensions, often used for ML algorithms implementation
-- PyPy, based on JIT compiler
-- Anaconda, proprietary, focused on data science
-
-In this lab, we will use Python 3.12, the standard CPython implementation.
-
-To initialize the Python project in a current directory, run:
-```bash
-uv venv --python 3.12.8
-uv init
-```
-Those commands will create the **virtual environment**, separating Python instance and its
-dependencies in the current projects from the main system one. It will also create files:
-- `pyproject.toml` - used for specifying dependencies
-- `.python-version` - stating Python version used
-
-To activate it, on Linux and macOS run `source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows.
-
-Verify the virtual environment by running the following command:
-```bash
-python --version
-```
-The output should point to the virtual environment directory, inside the current project directory.
-
-`pyproject.toml` contains the project metadata and dependencies. See [uv documentation](https://docs.astral.sh/uv/guides/projects/#pyprojecttoml)
-and [official pyproject.toml guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) for details.
-You can add the dependencies using the following command:
-```bash
-uv add <package-name>
-```
-The dependencies will be added to the `pyproject.toml` file and installed in the virtual environment.
-You can notice that a new file `uv.lock` has been created in the project directory. 
-It contains the exact versions of the packages you stated, as well as their own dependencies resolved
-by `uv`. It automatically installs them when added.
-
-Alternatively, you can also write dependencies manually. To resolve dependencies, call `uv lock`. To
-install them, run `uv sync`.
-
----
-
-## 2. Code versioning and Git  (0.5 points)
+## 1. Code versioning and Git  (0.5 points)
 
 Code versioning is a crucial part of software development. It allows you to keep track of changes,
 navigate through the source code history, and collaborate with other developers. We will use Git
@@ -122,6 +58,73 @@ git push -u origin master
 For open source projects, permissive license like MIT, BSD or Apache are preferred. For
 private, proprietary code, you generally don't need one, but you have to avoid using any
 GPL-licensed libraries.
+
+---
+
+## 2. Dependency management (0.5 points)
+
+Dependency management is an important aspect of software development. 
+It helps you manage the project dependencies, set constraints on allowed library versions,
+update them in a controlled way, and ensures that the application runs smoothly across
+different environments.
+
+`uv` is an extremely fast Python dependency and project manager, written in Rust.
+It allows you to switch between Python versions, resolve and pin dependencies, and install them
+blazingly fast. If you don't have it installed yet, follow [the official documentation](https://docs.astral.sh/uv/)
+for your operating systems.
+
+Verify the installation by running:
+```bash
+uv --version
+```
+
+Let's check the available python versions and implementations that can be installed using `uv`:
+```bash
+uv python list --all-platforms
+```
+
+As you can see, there is pretty long list of available python versions. `uv` is mostly concerned
+with CPython, the official implementation written in C. Alternatives include e.g.:
+- Cython, with custom compiled extensions, often used for ML algorithms implementation
+- PyPy, based on JIT compiler
+- Anaconda, proprietary, focused on data science
+
+In this lab, we will use Python 3.12, the standard CPython implementation.
+
+To initialize the Python project in a current directory, run:
+```bash
+uv venv --python 3.12
+uv init
+```
+Those commands will create the **virtual environment**, separating Python instance and its
+dependencies in the current projects from the main system one. It will also create files:
+- `pyproject.toml` - used for specifying dependencies
+- `.python-version` - stating Python version used
+
+To activate it, on Linux and macOS run `source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows.
+
+Verify the virtual environment by running the following command:
+```bash
+python --version
+```
+The output should point to the virtual environment directory, inside the current project directory.
+
+`pyproject.toml` contains the project metadata and dependencies. See [uv documentation](https://docs.astral.sh/uv/guides/projects/#pyprojecttoml)
+and [official pyproject.toml guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) for details.
+You can add the dependencies using the following command:
+```bash
+uv add <package-name>
+```
+The dependencies will be added to the `pyproject.toml` file and installed in the virtual environment.
+You can notice that a new file `uv.lock` has been created in the project directory. 
+It contains the exact versions of the packages you stated, as well as their own dependencies resolved
+by `uv`. It automatically installs them when added.
+
+Alternatively, you can also write dependencies manually. To resolve dependencies, call `uv lock`. To
+install them, run `uv sync`.
+
+Commit and push `pyproject.toml` and `uv.lock` to the GitHub repository. This will ensure full
+reproducibility for other developers.
 
 ---
 
@@ -201,18 +204,19 @@ For environment variables management, we will use:
 ```python
 # settings.py
 from pydantic_settings import BaseSettings
-from pydantic import validator
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
     ENVIRONMENT: str
     APP_NAME: str
 
-    @validator("environment")
+    @field_validator("environment")
+    @classmethod
     def validate_environment(cls, value):
        ... # implement me!
-        # prepare validator that will check whether the value of ENVIRONMENT is in (dev, test, prod) 
-        return value
+       # prepare validator that will check whether the value of ENVIRONMENT is in (dev, test, prod) 
+       return value
 ```
 Fill the `validate_environment` function, checking the parsed environment value. It should be one
 of: "dev", "test", "prod". If it's alright, return it, otherwise raise `ValidationError`. Use the
