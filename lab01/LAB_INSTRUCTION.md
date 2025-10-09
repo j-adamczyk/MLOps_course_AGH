@@ -449,8 +449,8 @@ class PredictResponse(BaseModel):
    so the model will be loaded and kept in memory.
 6. Create a new endpoint (route) in `app.py` file that accepts the input data for our model and returns the prediction:
 ```python
-@app.post("/predict", response_model=PredictResponse)
-def predict(request: PredictRequest):
+@app.post("/predict")
+def predict(request: PredictRequest) -> PredictResponse:
     prediction = model.predict(request.dict())
     return PredictResponse(prediction=prediction)
 ```
