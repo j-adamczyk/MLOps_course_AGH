@@ -103,9 +103,19 @@ dependencies in the current projects from the main system one. It will also crea
 
 To activate it, on Linux and macOS run `source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows.
 
-Verify the virtual environment by running the following command:
+Verify a python version by running the following command:
 ```bash
 python --version
+```
+
+Verify the virtual environment by running the following command: \
+On **Linux** or **macOS**:
+```bash
+which python
+```
+On **Windows**:
+```bash
+where python
 ```
 The output should point to the virtual environment directory, inside the current project directory.
 
