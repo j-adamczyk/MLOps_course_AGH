@@ -326,8 +326,8 @@ If the key doesn't work (but it's ID is listed), maybe gpg can't find your priva
 ```
 echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
 ```
-```
 And restart terminal. If this still doesn't work, try to reset everything:
+```
 rm -rf ~/.gnupg
 mkdir -p ~/.gnupg
 echo "pinentry-program /usr/bin/pinentry-curses" > ~/.gnupg/gpg-agent.conf
