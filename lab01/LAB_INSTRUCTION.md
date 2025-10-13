@@ -530,7 +530,7 @@ CMD ["uv", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
 ```bash
 docker build -t ml-app .
 ```
-To check the images available, run `docker images ps`.
+To check the images available, run `docker images`.
 
 4. Run the Docker container. We select the image by providing a tag. We also **expose** a port - by default
    Docker containers run in a complete network isolation, but here we want to access the server running in
