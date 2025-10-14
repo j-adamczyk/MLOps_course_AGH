@@ -231,7 +231,8 @@ detect this and raise `ValidationError` with readable message. Use the
    environment variables. They are loaded into the process, and later read as configuration. Typically,
    we want to have separate environments for different stages of development. They have different
    configuration, e.g. testing database has different address and password from the production one.
-   Create new folder `config` in main project directory, and store there 3 new files, each with `ENVIRONMENT` and `APP_NAME` variables:
+   Create new folder `config` in main project directory, and store there 3 new files, each with
+   `ENVIRONMENT` and `APP_NAME` variables:
    - `.env.dev`
    - `.env.test`
    - `.env.prod`
@@ -326,7 +327,8 @@ Check the file contents. It is a text format, but encrypted. Thus, you can safel
 sops --decrypt --in-place secrets.yaml
 ```
 
-If the key doesn't work (but it's ID is listed), maybe gpg can't find your private key in it's directory. Try:
+If the key doesn't work (but its ID is listed), maybe `gpg` can't find your private key in its directory.
+Try:
 ```
 echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
 ```
@@ -338,7 +340,7 @@ echo "pinentry-program /usr/bin/pinentry-curses" > ~/.gnupg/gpg-agent.conf
 gpgconf --kill gpg-agent
 chmod 700 ~/.gnupg
 ```
-And then generate key from the start (point 2.)
+And then generate key from the start (point 2).
 
 9. Update the application:
    - add `pyyaml` with `uv`, it can read YAML files ([tutorial](https://python.land/data-processing/python-yaml))
@@ -355,7 +357,7 @@ And then generate key from the start (point 2.)
 Testing is an important aspect of software development. It helps to ensure that the application
 works as expected and there are no obvious bugs. We will use `pytest` as our testing framework.
 
-1. Install the `pytest` and `pytest-dotenv` packages using `uv`.
+1. Install the `pytest` package using `uv`.
 2. Prepare `.env.test` file containing the variables that should be loaded to `Settings` object while tests run.
    It should have the same keys as expected production configuration, but fake values.
 3. Prepare `pytest.ini` file with the configuration for `pytest`. We could also put this in `pyproject.toml`,
@@ -373,9 +375,10 @@ env_files =
 ```bash
 uv run pytest tests -rP
 ```
-If you encountered a problem where pytest can't load `src` module, try:
+If you encounter a problem where `pytest` can't load `src` module, try adding the project
+root explicitly to its PYTHONPATH config:
 ```
-pythonpath = .
+PYTHONPATH = .
 ```
 8. Commit the changes.
 
@@ -519,14 +522,17 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv package manager
-RUN pip install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    export PATH="/root/.local/bin:$PATH"
+
+# Add uv to PATH
+ENV PATH="/root/.local/bin:$PATH"
 
 # Copy only dependency files first (to leverage caching)
 COPY lab/pyproject.toml lab/uv.lock ./
 
-# make uv work in system's python
-ENV UV_PROJECT_ENVIRONMENT=/usr/local
 # Install project dependencies using uv
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
 RUN uv sync
 
 # Copy the rest of the application code
