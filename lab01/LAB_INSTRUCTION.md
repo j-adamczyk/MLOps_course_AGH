@@ -103,11 +103,15 @@ dependencies in the current projects from the main system one. It will also crea
 
 To activate it, on Linux and macOS run `source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows.
 
-Verify the virtual environment by running the following command:
+Verify the Python version by running the following command:
 ```bash
 python --version
 ```
 The output should point to the virtual environment directory, inside the current project directory.
+
+Verify the virtual environment by running the following command:
+- Linux / macOS: `which python`
+- Windows: `where python`
 
 `pyproject.toml` contains the project metadata and dependencies. See [uv documentation](https://docs.astral.sh/uv/guides/projects/#pyprojecttoml)
 and [official pyproject.toml guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) for details.
@@ -211,7 +215,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str
     APP_NAME: str
 
-    @field_validator("environment")
+    @field_validator("ENVIRONMENT")
     @classmethod
     def validate_environment(cls, value):
        ... # implement me!
@@ -541,7 +545,7 @@ CMD ["uv", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
 ```bash
 docker build -t ml-app .
 ```
-To check the images available, run `docker images ps`.
+To check the images available, run `docker images`.
 
 4. Run the Docker container. We select the image by providing a tag. We also **expose** a port - by default
    Docker containers run in a complete network isolation, but here we want to access the server running in

@@ -16,7 +16,10 @@ CREATE TABLE services (
     "Stop:Arrival cancelled" BOOLEAN,
     "Stop:Departure time" TIMESTAMP,
     "Stop:Departure delay" INT,
-    "Stop:Departure cancelled" BOOLEAN
+    "Stop:Departure cancelled" BOOLEAN,
+    "Stop:Platform change" BOOLEAN,
+    "Stop:Planned platform" INT,
+    "Stop:Actual platform" INT,
 );
 CREATE INDEX service_rdt_id ON services("Service:RDT-ID");
 CREATE INDEX service_date ON services("Service:Date");
