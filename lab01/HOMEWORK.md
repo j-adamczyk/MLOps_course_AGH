@@ -59,7 +59,7 @@ The sample expected response is:
 { "prediction": "positive" } 
 ``` 
 
-## 3. Sentiment analysis implementation (2 points)
+## 4. Sentiment analysis implementation (2 points)
 
 Your teammate, the data scientist, has already prepared the sentiment analysis model for you: logistic
 regression on top of Sentence Transformer embeddings. Transformer was saved with `sentence-transformers`
@@ -74,7 +74,7 @@ logistic regression. It returns one of 3 classes for text sentiment: 0 (negative
 
 Add the model to your FastAPI server. Return predicted class as a string.
 
-## 4. Code testing (1 point)
+## 5. Code testing (1 point)
 
 Implement unit tests with `pytest`:
 - test input validation, model inference, and response validation
@@ -84,7 +84,7 @@ Implement unit tests with `pytest`:
 - output should be a valid JSON response
 - for an invalid input, validation should return a valid JSON with error explanation
 
-## 5. Containerization (2 points)
+## 6. Containerization (2 points)
 
 Implement Docker and Docker Compose to containerize your application, so it:
 - is packaged in a Docker container, with code and model
@@ -97,7 +97,7 @@ it should have the same Python version as your application.
 
 Validate that everything works by running Docker Compose and making queries to the webserver.
 
-## 6. Bonus exercise (2 extra points)
+## 7. Bonus exercise (2 extra points)
 
 Optimize your Dockerfile:
 - use small, lightweight base image
