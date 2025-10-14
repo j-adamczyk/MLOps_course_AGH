@@ -231,7 +231,8 @@ detect this and raise `ValidationError` with readable message. Use the
    environment variables. They are loaded into the process, and later read as configuration. Typically,
    we want to have separate environments for different stages of development. They have different
    configuration, e.g. testing database has different address and password from the production one.
-   Create 3 files, each with `ENVIRONMENT` and `APP_NAME` variables:
+   Create new folder `config` in main project directory, and store there 3 new files, each with
+   `ENVIRONMENT` and `APP_NAME` variables:
    - `.env.dev`
    - `.env.test`
    - `.env.prod`
@@ -325,6 +326,22 @@ Check the file contents. It is a text format, but encrypted. Thus, you can safel
 ```bash
 sops --decrypt --in-place secrets.yaml
 ```
+
+If the key doesn't work (but its ID is listed), maybe `gpg` can't find your private key in its directory.
+Try:
+```
+echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
+```
+And restart terminal. If this still doesn't work, try to reset everything:
+```
+rm -rf ~/.gnupg
+mkdir -p ~/.gnupg
+echo "pinentry-program /usr/bin/pinentry-curses" > ~/.gnupg/gpg-agent.conf
+gpgconf --kill gpg-agent
+chmod 700 ~/.gnupg
+```
+And then generate key from the start (point 2).
+
 9. Update the application:
    - add `pyyaml` with `uv`, it can read YAML files ([tutorial](https://python.land/data-processing/python-yaml))
    - load decrypted file as environment variables, using `pyyaml` and `os` modules
@@ -350,13 +367,18 @@ works as expected and there are no obvious bugs. We will use `pytest` as our tes
 env_files =
     ./config/.env.test
 ```
-4. Create `test` directory, where we will implement tests.
+4. Create `tests` directory, where we will implement tests.
 5. Implement the basic test for settings. It should check if settings are loaded correctly
    and contain all the expected values.
 6. Write test cases for the application that cover the functionality:
 7. Run the tests using the following command:
 ```bash
 uv run pytest tests -rP
+```
+If you encounter a problem where `pytest` can't load `src` module, try adding the project
+root explicitly to its PYTHONPATH config:
+```
+PYTHONPATH = .
 ```
 8. Commit the changes.
 
@@ -405,7 +427,7 @@ def health_check():
 ```
 3. Run the actual application server, exposed on port 8000:
 ```bash
-uv run uvicorn app:app --reload port=8000 
+uv run uvicorn app:app --reload --port 8000
 ```
 4. Open the browser and go to http://localhost:8000 to see the welcome message.
 5. Navigate to http://localhost:8000/health to invoke `/health` endpoint and see
@@ -455,7 +477,7 @@ class PredictResponse(BaseModel):
 ```python
 @app.post("/predict")
 def predict(request: PredictRequest) -> PredictResponse:
-    prediction = model.predict(request.dict())
+    prediction = model.predict(request.model_dump())
     return PredictResponse(prediction=prediction)
 ```
 7. Run the app and verify that the new route works as expected.
@@ -489,7 +511,7 @@ as it uses a very readable YAML configuration file.
 # Dockerfile
 
 # Use a minimal Python image as the base
-FROM python:3.12.x-slim
+FROM python:3.12-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -500,13 +522,18 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv package manager
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    export PATH="/root/.local/bin:$PATH"
+
+# Add uv to PATH
+ENV PATH="/root/.local/bin:$PATH"
 
 # Copy only dependency files first (to leverage caching)
 COPY lab/pyproject.toml lab/uv.lock ./
 
 # Install project dependencies using uv
-RUN uv pip install --system
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
+RUN uv sync
 
 # Copy the rest of the application code
 COPY lab . 
@@ -530,7 +557,7 @@ To check the images available, run `docker images`.
    Docker containers run in a complete network isolation, but here we want to access the server running in
    the container from our host machine.
 ```bash
-docker run -rm -p 8000:8000 ml-app
+docker run --rm -p 8000:8000 ml-app
 ```
 To see the running containers, run `docker ps`.
 
