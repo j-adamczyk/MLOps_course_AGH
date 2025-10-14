@@ -103,21 +103,15 @@ dependencies in the current projects from the main system one. It will also crea
 
 To activate it, on Linux and macOS run `source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows.
 
-Verify a python version by running the following command:
+Verify the Python version by running the following command:
 ```bash
 python --version
 ```
-
-Verify the virtual environment by running the following command: \
-On **Linux** or **macOS**:
-```bash
-which python
-```
-On **Windows**:
-```bash
-where python
-```
 The output should point to the virtual environment directory, inside the current project directory.
+
+Verify the virtual environment by running the following command:
+- Linux / macOS: `which python`
+- Windows: `where python`
 
 `pyproject.toml` contains the project metadata and dependencies. See [uv documentation](https://docs.astral.sh/uv/guides/projects/#pyprojecttoml)
 and [official pyproject.toml guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) for details.
