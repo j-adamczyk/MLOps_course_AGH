@@ -1,5 +1,5 @@
 [project]
-name = "MLOps_course_AGH_lab_02"
+name = "MLOps_course_AGH_lab_03"
 version = "1.0.0"
 description = ""
 readme = "README.md"
@@ -7,12 +7,10 @@ readme = "README.md"
 requires-python = ">=3.11"
 
 dependencies = [
-    "duckdb",
     "jupyter",
     "matplotlib",
     "pandas",
-    "psycopg[binary]",
+    "polars",
     "pyarrow",
     "ruff",
-    "scipy",
 ]
