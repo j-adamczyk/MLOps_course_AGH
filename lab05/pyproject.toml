@@ -1,0 +1,31 @@
+[project]
+name = "MLOps_course_AGH_lab_05"
+version = "1.0.0"
+description = ""
+readme = "README.md"
+
+requires-python = "==3.11.*"
+
+dependencies = [
+    "click",
+    "dvc",
+    "feature-engine",
+    "jupyter",
+    "mlflow",
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "ruff",
+    "scikit-learn",
+    "torch",
+]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu" }
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

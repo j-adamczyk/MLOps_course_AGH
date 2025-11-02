@@ -5,3 +5,5 @@ Topics:
 2. [Databases & file formats](lab02) - PostgreSQL, DuckDB, Parquet
 3. [Data processing](lab03) - Polars
 4. [Vector databases](lab04) - pgvectorscale, SQLAlchemy, Milvus
+5. [Versioning](lab05) - DVC, MLFlow
+6. [ML testing & data-centric AI](lab06) - CleanLab, Giskard, Captum, SHAP
