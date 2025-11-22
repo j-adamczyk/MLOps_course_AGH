@@ -1,0 +1,21 @@
+[project]
+name = "MLOps_course_AGH_lab_08"
+version = "1.0.0"
+description = ""
+readme = "README.md"
+
+requires-python = ">=3.11"
+
+dependencies = [
+    "datasets<4",
+    "evidently==0.6.7",
+    "jupyter",
+    "nannyml",
+    "pandas",
+    "scikit-learn",
+    "sentence-transformers",
+    "transformers[torch]",
+]
+
+[tool.uv]
+override-dependencies = ["kaleido>=1.0.0"]

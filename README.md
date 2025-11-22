@@ -8,3 +8,4 @@ Topics:
 5. [Versioning](lab05) - DVC, MLFlow
 6. [ML testing & data-centric AI](lab06) - CleanLab, Giskard, Captum, SHAP
 7. [Model optimization for inference](lab07) - PyTorch optimization, ONNX, ONNX Runtime
+8. [Monitoring & drift detection](lab08) - Evidently, NannyML
