@@ -127,8 +127,9 @@ to Pydantic, i.e. with attributes and types. However, here we also need to assig
 database types. To integrate it with vector search, we will also use `pgvector` library.
 
 ```python
+from typing import List
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import Integer, String, List
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -171,10 +172,11 @@ you need to create the `Images` object based on provided data.
 
 ```python
 from sqlalchemy.orm import Session
+from sqlalchemy import Engine, select
 import numpy as np
 
 # reusable function to insert data into the table
-def insert_image(engine: sqlalchemy.Engine, image_path: str, image_embedding: list[float]):
+def insert_image(engine: Engine, image_path: str, image_embedding: list[float]):
     with Session(engine) as session:
         # create the image object
         image = 
@@ -196,12 +198,12 @@ with Session(engine) as session:
 
 
 # calculate the cosine similarity between the first image and the K rest of the images, order the images by the similarity score
-def find_k_images(engine: sqlalchemy.Engine, k: int, orginal_image: Image) -> list[Image]:
+def find_k_images(engine: Engine, k: int, orginal_image: Images) -> list[Images]:
     with Session(engine) as session:
         # execution_options={"prebuffer_rows": True} is used to prebuffer the rows, this is useful when we want to fetch the rows in chunks and return them after session is closed
         result = session.execute(
-            select(Image)
-            .order_by(Image.image_embedding.cosine_similarity(orginal_image.image_embedding))
+            select(Images)
+            .order_by(Images.image_embedding.cosine_similarity(orginal_image.image_embedding))
             .limit(k), 
             execution_options={"prebuffer_rows": True}
         )
@@ -218,11 +220,11 @@ We can filter the found nearest neighbors, e.g. by required minimal similarity s
 
 ```python
 # find the images with the similarity score greater than 0.9
-def find_images_with_similarity_score_greater_than(engine: sqlalchemy.Engine, similarity_score: float, orginal_image: Image) -> list[Image]:
+def find_images_with_similarity_score_greater_than(engine: Engine, similarity_score: float, orginal_image: Images) -> list[Images]:
     with Session(engine) as session:
         result = session.execute(
-            select(Image)
-            .filter(Image.image_embedding.cosine_similarity(orginal_image.image_embedding) > similarity_score), 
+            select(Images)
+            .filter(Images.image_embedding.cosine_similarity(orginal_image.image_embedding) > similarity_score), 
             execution_options={"prebuffer_rows": True}
         )
         return result
@@ -340,7 +342,7 @@ insert_games(engine, dataset)
 Now the function that will find the games similar to the given game, and also include given filtering criteria.
 ```python
 def find_game(
-    engine: sqlalchemy.Engine, 
+    engine: Engine, 
     game_description: str, 
     windows: Optional[bool] = None, 
     linux: Optional[bool] = None,
@@ -508,6 +510,7 @@ import requests
 
 def download_pdf_data(pdf_url: str, file_name: str) -> None:
     response = requests.get(pdf_url, stream=True)
+    os.makedirs(data_dir, exist_ok=True)
     with open(os.path.join(data_dir, file_name), "wb") as file:
         for block in response.iter_content(chunk_size=1024):
             if block:
