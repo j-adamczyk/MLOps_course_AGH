@@ -362,24 +362,23 @@ works as expected and there are no obvious bugs. We will use `pytest` as our tes
    It should have the same keys as expected production configuration, but fake values.
 3. Prepare `pytest.ini` file with the configuration for `pytest`. We could also put this in `pyproject.toml`,
    this depends on personal preference.
-```toml
-[pytest]
-env_files =
-    ./config/.env.test
-```
+    ```toml
+    [pytest]
+    env_files = ./config/.env.test
+    ```
 4. Create `tests` directory, where we will implement tests.
 5. Implement the basic test for settings. It should check if settings are loaded correctly
    and contain all the expected values.
 6. Write test cases for the application that cover the functionality:
 7. Run the tests using the following command:
-```bash
-uv run pytest tests -rP
-```
-If you encounter a problem where `pytest` can't load `src` module, try adding the project
-root explicitly to its PYTHONPATH config:
-```
-PYTHONPATH = .
-```
+    ```bash
+    uv run pytest tests -rP
+    ```
+    If you encounter a problem where `pytest` can't load `src` module, try adding the project
+    root explicitly to its PYTHONPATH config:
+    ```
+    PYTHONPATH = .
+    ```
 8. Commit the changes.
 
 ---
@@ -457,29 +456,29 @@ implemented in [scikit-learn](https://scikit-learn.org/stable/).
    JSON data as Python objects and verifies keys, values, and their types. Pydantic uses classes
    and types to define the format of request and response. Create new directory and file `api/models/iris.py`,
    and define API request and response models there:
-```python
-from pydantic import BaseModel
-
-
-class PredictRequest(BaseModel):
-    sepal_length: float
-    sepal_width: float
-    petal_length: float
-    petal_width: float
-
-
-class PredictResponse(BaseModel):
-    prediction: str
-```
+    ```python
+    from pydantic import BaseModel
+    
+    
+    class PredictRequest(BaseModel):
+        sepal_length: float
+        sepal_width: float
+        petal_length: float
+        petal_width: float
+    
+    
+    class PredictResponse(BaseModel):
+        prediction: str
+    ```
 5. Load the model as a global variable in `app.py`. This global code runs once, on the application initialization,
    so the model will be loaded and kept in memory.
 6. Create a new endpoint (route) in `app.py` file that accepts the input data for our model and returns the prediction:
-```python
-@app.post("/predict")
-def predict(request: PredictRequest) -> PredictResponse:
-    prediction = model.predict(request.model_dump())
-    return PredictResponse(prediction=prediction)
-```
+    ```python
+    @app.post("/predict")
+    def predict(request: PredictRequest) -> PredictResponse:
+        prediction = model.predict(request.model_dump())
+        return PredictResponse(prediction=prediction)
+    ```
 7. Run the app and verify that the new route works as expected.
 8. Commit the changes.
 
@@ -507,59 +506,59 @@ as it uses a very readable YAML configuration file.
 2. Let's containerize our application, i.e. put code inside an isolated container.
    Create a Dockerfile (literally `Dockerfile` text file) in the project directory 
    and define the Docker image for the application. Change the directory names if necessary.
-```dockerfile
-# Dockerfile
-
-# Use a minimal Python image as the base
-FROM python:3.12-slim
-
-# Set the working directory in the container
-WORKDIR /app
-
-# Install required system dependencies
-RUN apt-get update && apt-get install -y \
-    curl libsnappy-dev make gcc g++ libc6-dev libffi-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install uv package manager
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    export PATH="/root/.local/bin:$PATH"
-
-# Add uv to PATH
-ENV PATH="/root/.local/bin:$PATH"
-
-# Copy only dependency files first (to leverage caching)
-COPY lab/pyproject.toml lab/uv.lock ./
-
-# Install project dependencies using uv
-ENV UV_PROJECT_ENVIRONMENT=/usr/local
-RUN uv sync
-
-# Copy the rest of the application code
-COPY lab . 
-
-# Expose the application port
-EXPOSE 8000
-
-# Run the application with uv
-CMD ["uv", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
-```
+    ```dockerfile
+    # Dockerfile
+    
+    # Use a minimal Python image as the base
+    FROM python:3.12-slim
+    
+    # Set the working directory in the container
+    WORKDIR /app
+    
+    # Install required system dependencies
+    RUN apt-get update && apt-get install -y \
+        curl libsnappy-dev make gcc g++ libc6-dev libffi-dev \
+        && rm -rf /var/lib/apt/lists/*
+    
+    # Install uv package manager
+    RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+        export PATH="/root/.local/bin:$PATH"
+    
+    # Add uv to PATH
+    ENV PATH="/root/.local/bin:$PATH"
+    
+    # Copy only dependency files first (to leverage caching)
+    COPY lab/pyproject.toml lab/uv.lock ./
+    
+    # Install project dependencies using uv
+    ENV UV_PROJECT_ENVIRONMENT=/usr/local
+    RUN uv sync
+    
+    # Copy the rest of the application code
+    COPY lab . 
+    
+    # Expose the application port
+    EXPOSE 8000
+    
+    # Run the application with uv
+    CMD ["uv", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+    ```
 
 3. Build the Docker image with command below. This will download base image, apply all layers, and save the
    resulting image in your local Docker registry. `-t` or `--tag` adds a named tag to the image, allowing
    you to use that tag instead of randomly generated ID.
-```bash
-docker build -t ml-app .
-```
-To check the images available, run `docker images`.
+    ```bash
+    docker build -t ml-app .
+    ```
+    To check the images available, run `docker images`.
 
 4. Run the Docker container. We select the image by providing a tag. We also **expose** a port - by default
    Docker containers run in a complete network isolation, but here we want to access the server running in
    the container from our host machine.
-```bash
-docker run --rm -p 8000:8000 ml-app
-```
-To see the running containers, run `docker ps`.
+    ```bash
+    docker run --rm -p 8000:8000 ml-app
+    ```
+    To see the running containers, run `docker ps`.
 
 5. Open the browser and navigate to http://localhost:8000. Verify that the application is running.
 6. Commit the changes.
@@ -581,21 +580,19 @@ for single container applications, as we don't have to type everything each time
 
 1. Make sure you have Docker Compose installed, e.g. run `docker compose ps`
 2. Create `docker-compose.yaml` file:
-```yaml
-version: '3.8'
-
-services:
-  ml-app:
-    build: .
-    ports:
-      - "8000:8000"
-```
+    ```yaml
+    services:
+      ml-app:
+        build: .
+        ports:
+          - "8000:8000"
+    ```
 3. Run the application:
-```bash
-docker compose up
-```
+    ```bash
+    docker compose up
+    ```
 4. Open the browser and navigate to http://localhost:8000. Verify that the application is running.
 5. Turn off with:
-```bash
-docker compose down
-```
+    ```bash
+    docker compose down
+    ```
