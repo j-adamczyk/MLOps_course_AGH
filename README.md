@@ -10,3 +10,4 @@ Topics:
 7. [Model optimization for inference](lab07) - PyTorch optimization, ONNX, ONNX Runtime
 8. [Monitoring & drift detection](lab08) - Evidently, NannyML
 9. [Introduction to cloud computing](lab09) - AWS services
+10. [Infrastructure as Code (IaC)](lab10) - Terraform
