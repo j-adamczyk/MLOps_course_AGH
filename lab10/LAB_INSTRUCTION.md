@@ -1,4 +1,4 @@
-# Laboratory 7 instruction
+# Laboratory 10 instruction
 
 ## Introduction
 
