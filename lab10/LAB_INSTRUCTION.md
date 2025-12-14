@@ -764,10 +764,10 @@ output "bucket_regions" {
 Now review the changes and determine for yourself whether
 it is now clearer, shorter and easier to maintain the module.
 
-## Grading [10 points]
+## Grading [15 points]
 
-1. GitHub repository creation [1 point]
-2. GitHub repository refactor [2 points]
-3. Aliases [1 point]
-4. S3 buckets across multiple regions [3 points]
-5. Modules - S3 setup refactor [3 points]
+1. GitHub repository creation [2 points]
+2. GitHub repository refactor [3 points]
+3. Aliases [2 points]
+4. S3 buckets across multiple regions [4 points]
+5. Modules - S3 setup refactor [4 points]
