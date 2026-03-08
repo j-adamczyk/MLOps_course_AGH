@@ -325,7 +325,7 @@ of what's present, and what needs to be changed depending on your declarations. 
 this:
 1. **Local**: Terraform state files are stored locally in project directory.
 2. **Terraform Cloud**: Terraform state files are stored in Terraform Cloud.
-3. **Terraform third party remote backends**: store state files on remove storage, e.g. S3, GCS, Azure Storage.
+3. **Terraform third party remote backends**: store state files on remote storage, e.g. S3, GCS, Azure Storage.
 
 We commonly use **remote state backends**, as it has considerable advantages:
 1. **Centralized management** - it's easier to track changes, collaborate with other team members,
@@ -710,7 +710,7 @@ provider "aws" {
 8. In the project root, create file `s3.tf` and inside define S3 using our new module.
 
 ```hcl
-# s3
+# s3.tf
 resource "random_id" "bucket_suffix" {
   count       = length(var.regions) # notice new option - it will create N resources that can be accesses by [index]
   keepers = {
