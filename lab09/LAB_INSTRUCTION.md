@@ -233,7 +233,7 @@ necessary parts.
 1. Go to the **VPC Console** in the AWS Management Console. As you can see, one
 default VPC is already created by AWS, but we will create our own.
 2. Configure the following: 
-* **Name**: sentiment-app-vpc.
+* **Name Tag**: sentiment-app-vpc.
 * **IPv4 CIDR Block**: Use `10.0.0.0/16`. This has `~65,536 IP addresses`,
 see e.g. `cidr.xyz` for details.
 * **Tenancy**: Select Default unless dedicated hardware is required.
@@ -289,7 +289,7 @@ route tables keep backend resources isolated.
 ![RouteTableAssociation](./images/route_table_association.png)
 3. Add a route to allow internet access:
 * **Destination**: `0.0.0.0/0`
-* **Target**: Select the Internet Gateway created earlier (`igw-id`)
+* **Target**: Select the Internet Gateway created earlier (`igw-<id>`)
 
 #### 4.4.2 Create and configure a private route table
 1. Create another route table (e.g., `private-route-table`).
