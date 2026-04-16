@@ -18,14 +18,3 @@ You will work with either Terraform or Pulumi - both tracks cover the same scena
 
 In this lab, there is no separate homework. Laboratory instructions are long and also act
 as homework. Start with [LAB_INSTRUCTION.md](LAB_INSTRUCTION.md) to pick your tool.
-
-**Local Pulumi working directories**
-
-The Pulumi notebook track uses a local file backend. Running the setup cell creates two
-directories next to the notebook:
-
-- `.pulumi-state/` - local Pulumi state (one subdir per stack, holds resource state)
-- `.pulumi-home/` - local Pulumi CLI artifacts (plugins, credentials, cache)
-
-Both are machine-local working dirs with state/metadata/cache and must **not** be committed
-to the repository. They are already listed in the root `.gitignore`.
