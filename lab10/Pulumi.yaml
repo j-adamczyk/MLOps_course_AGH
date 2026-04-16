@@ -1,0 +1,7 @@
+name: iac
+runtime:
+  name: python
+  options:
+    toolchain: uv
+
+description: MLOps Lab 10 - Pulumi

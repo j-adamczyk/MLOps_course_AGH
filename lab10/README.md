@@ -1,23 +1,31 @@
 ## Lab 10 - Infrastructure as Code (IaC)
 
-This lab concerns implementing cloud infrastructure using Infrastructure as Code (IaC)
-tools. It allows you to manage cloud setup using code tools, enabling automation,
-reproducibility, Git versioning, and more. This is very important for any application
-that is not trivial proof-of-concept. We will use Terraform, as the most popular IaC
-tool.
+This lab covers provisioning and managing cloud infrastructure using Infrastructure as Code tools.
+You will work with either Terraform or Pulumi - both tracks cover the same scenarios.
 
-**Learning plan**
-1. Terraform basics, HCL language
-2. State management
-3. Cloud providers for Terraform
-4. Modules and reusable code
+**Learning goals**
+- IaC concepts and state management
+- Cloud provider configuration and multi-region deployments
+- Code reuse patterns (modules / functions)
 
 **Necessary software**
-- [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
-- AWS account
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- AWS account + [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- If using Terraform: [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (Pulumi not needed)
+- If using Pulumi: [Pulumi CLI](https://www.pulumi.com/docs/install/) (Terraform not needed), then `uv sync`
 
 **Lab & homework**
 
 In this lab, there is no separate homework. Laboratory instructions are long and also act
-as homework. See the [lab instruction](LAB_INSTRUCTION.md).
+as homework. Start with [LAB_INSTRUCTION.md](LAB_INSTRUCTION.md) to pick your tool.
+
+**Local Pulumi working directories**
+
+The Pulumi notebook track uses a local file backend. Running the setup cell creates two
+directories next to the notebook:
+
+- `.pulumi-state/` - local Pulumi state (one subdir per stack, holds resource state)
+- `.pulumi-home/` - local Pulumi CLI artifacts (plugins, credentials, cache)
+
+Both are machine-local working dirs with state/metadata/cache and must **not** be committed
+to the repository. They are already listed in the root `.gitignore`.
