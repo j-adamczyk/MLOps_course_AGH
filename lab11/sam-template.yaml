@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  ImageUri:
+    Type: String
+  LambdaExecutionRoleArn:
+    Type: String
+
+Resources:
+  SentimentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageUri: !Ref ImageUri
+      Role: !Ref LambdaExecutionRoleArn
+      MemorySize: 2048
+      Timeout: 60
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /predict
+            Method: post
+
+Outputs:
+  ApiUrl:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/predict"

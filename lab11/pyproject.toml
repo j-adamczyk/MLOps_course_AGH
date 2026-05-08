@@ -1,0 +1,50 @@
+[project]
+name = "lab11-sentiment"
+version = "0.1.0"
+description = "Lab 11 - zero-shot sentiment classifier deployed to AWS Lambda via SAM"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+integration = [
+    "ruff>=0.6",
+    "pytest>=8",
+    {include-group = "inference"},
+]
+deployment = [
+    "huggingface_hub>=0.24",
+    "transformers>=4.40",
+    "torch>=2.2",
+    "onnx>=1.16",
+    "boto3>=1.34",
+    "pydantic-settings>=2",
+]
+inference = [
+    "onnxruntime>=1.18",
+    "tokenizers>=0.20",
+    "fastapi>=0.110",
+    "uvicorn>=0.30",
+    "mangum>=0.18",
+    "awslambdaric>=2.0",
+    "pydantic>=2",
+    "pydantic-settings>=2",
+    "numpy>=1.26",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sentiment_app", "src"]

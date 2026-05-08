@@ -6,13 +6,14 @@ automated and efficient updates of models to production environment.
 
 We will use GitHub Actions for implementing CI/CD pipelines due to their simplicity and
 popularity. Prior to deployment itself, we will use ONNX tools to compile and optimize
-our model.
+our model. And AWS SAM (Serverless Application Model) for deployment configuration and execution.
 
 **Learning Plan**
 1. GitHub Actions workflows
 2. CI/CD pipelines for Python applications
 3. ONNX format and runtime
 4. Lightweight Docker images for ML inference
+5. AWS SAM for model deployment
 
 **Necessary software**
 - AWS account
@@ -22,12 +23,6 @@ our model.
   also [see those post-installation notes](https://docs.docker.com/engine/install/linux-postinstall/)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-Note that you should also create and activate `uv` project.
-
 **Lab**
 
 See [lab instruction](LAB_INSTRUCTION.md).
-
-**Homework**
-
-See [homework instruction](HOMEWORK.md).
