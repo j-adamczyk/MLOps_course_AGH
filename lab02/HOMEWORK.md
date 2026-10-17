@@ -34,9 +34,9 @@ below
    same value in `Service:RDT-ID` column. Note that starting station for a service has NULL value in `Stop:Arrival time`
    column, while the end station has NULL value in `Stop:Departure time` column.
 7. Make queries to answer the following questions:
-   1. How many trains departed from Amsterdam Central station overall?
+   1. How many trains departed from Amsterdam Centraal station overall?
    2. Calculate the average arrival delay of different service types (`Service:Type`). Order results descending by average delay.
-   3. What was the most common disruption cause in different years? [MODE function](https://duckdb.org/docs/stable/sql/functions/aggregates.html#modex) may be useful.
+   3. What was the most common disruption cause in different years? [MODE function](https://duckdb.org/docs/current/sql/functions/aggregates.html#modex) may be useful.
    4. How many trains started their overall service in any Amsterdam station?
    5. What fraction of services was run to final destinations outside the Netherlands?
    6. What is the largest distance between stations in the Netherlands (code `NL`)?
@@ -46,8 +46,8 @@ below
 8. Currently, `services` table does not provide information about service lengths, neither between pairs of stations
    nor for the end-to-end service. Prepare this information:
    1. Note that each service has the same `Service:RDT-ID`, and stations can be ordered by `Stop:Departure time`,
-      with the last one being NULL. Using [window functions](https://duckdb.org/docs/stable/sql/functions/window_functions.html),
-      specifically [LAG() or LEAD()](https://duckdb.org/docs/stable/sql/functions/window_functions.html),
+      with the last one being NULL. Using [window functions](https://duckdb.org/docs/current/sql/functions/window_functions.html),
+      specifically [LAG() or LEAD()](https://duckdb.org/docs/current/sql/functions/window_functions.html),
       you can get next row. [This example](https://stackoverflow.com/a/62584847/9472066) may also be useful.
    2. Create table `station_connections`, with columns `Service:RDT-ID`, `start_station_code` and `end_station_code`
       (pair of stations on a route), and `distance` between them. Note that you should deduplicate the data on station
