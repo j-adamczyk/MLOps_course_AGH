@@ -1,4 +1,4 @@
-# Laboratory 4 instruction
+Laboratory 4 instruction
 
 ## Introduction
 
@@ -427,30 +427,24 @@ example of vector database. To generate embeddings, we will use
 [Silver Retriever model](https://huggingface.co/ipipan/silver-retriever-base-v1.1) from Sentence Transformers.
 It is based on HerBERT model for Polish language, and finetuned for retrieval of similar vectors.
 
-1. Start by setting up Milvus by using its Docker image. Docker Compose file is also conveniently
-   provided by its creators:
+1. Start by installing [Milvus Lite](https://milvus.io/docs/milvus_lite.md). It runs inside your Python
+   process and stores data in a local file:
 ```bash
 mkdir milvus_db
 cd milvus_db
 
-wget https://github.com/milvus-io/milvus/releases/download/v2.6.15/milvus-standalone-docker-compose.yml -O docker-compose.yml
+uv add "pymilvus[milvus-lite]"
 ```
-2. Run the database with `docker compose up -d`.
-3. Next code sections are quite interactive and will probably be easier to run inside a Jupyter
+2. Next code sections are quite interactive and will probably be easier to run inside a Jupyter
    Notebook. Start it with `jupyter notebook`.
-4. Let's connect to the database. Milvus provides its own `pymilvus` library.
+3. Let's connect to the database. Passing a local file path to `MilvusClient` creates the database
+   in that file.
 ```python
 from pymilvus import MilvusClient
 
-host = "localhost"
-port = "19530"
-
-milvus_client = MilvusClient(
-    host=host,
-    port=port
-)
+milvus_client = MilvusClient("./milvus_rag.db")
 ```
-5. Vector databases work quite similarly to document databases like e.g. MongoDB. We define
+4. Vector databases work quite similarly to document databases like e.g. MongoDB. We define
    not a table, but a **collection** with specific **schema**, but conceptually it's a bit similar.
    For each element, we have an ID, text, and its embedding.
 ```python
@@ -466,7 +460,7 @@ fields = [id_field, text, embedding_text]
 
 schema = CollectionSchema(fields=fields, auto_id=True, enable_dynamic_field=True, description="RAG Texts collection")
 ```
-6. To create a collection with the given schema:
+5. To create a collection with the given schema:
 ```python
 COLLECTION_NAME = "rag_texts_and_embeddings"
 
@@ -495,7 +489,7 @@ print(milvus_client.list_collections())
 # describe our collection
 print(milvus_client.describe_collection(COLLECTION_NAME))
 ```
-7. Now we are able to insert documents into put database. RAG is the most useful when information
+6. Now we are able to insert documents into put database. RAG is the most useful when information
    is very specialized, niche, or otherwise probably unknown to the model or less popular. Let's
    start with ["IAB POLSKA Przewodnik po sztucznej inteligencji"](https://www.iab.org.pl/wp-content/uploads/2024/04/Przewodnik-po-sztucznej-inteligencji-2024_IAB-Polska.pdf).
    This part is inspired by [SpeakLeash](https://www.speakleash.org/) and one of their projects
@@ -519,7 +513,7 @@ embeddings_json = "Przewodnik-po-sztucznej-inteligencji-2024_IAB-Polska-Embeddin
 ## local destination of all above local required files
 data_dir = "./data"
 ```
-8. Let's download the document into the `data_dir` directory:
+7. Let's download the document into the `data_dir` directory:
 ```python
 # download data
 import os
@@ -535,7 +529,7 @@ def download_pdf_data(pdf_url: str, file_name: str) -> None:
 
 download_pdf_data(pdf_url, file_name)
 ```
-9. This is a lot of text, and in RAG we need to add specific fragments to the prompt.
+8. This is a lot of text, and in RAG we need to add specific fragments to the prompt.
    To keep things simple, and number of vectors not too large, we will treat each page
    as a separate **chunk** to vectorize and search for. Below, we paginate document and save each
    page separately into a JSON file in format `{"page": page_number, "text": text_of_the_page}`.
@@ -560,7 +554,7 @@ def extract_pdf_text(file_name, file_json):
 
 extract_pdf_text(file_name, file_json)
 ```
-10. Now we have texts, but we need vectors. We will use the model to embed text from each page
+9. Now we have texts, but we need vectors. We will use the model to embed text from each page
     and save the result in out collection in Milvus. It's very easy if we first prepare a single
     JSON file with all data. Its format is `{"page": page_num, "embedding": embedded_text}`.
 ```python
@@ -593,7 +587,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = SentenceTransformer(model_name, device=device)
 generate_embeddings(file_json, embeddings_json, model)
 ```
-11. Now we can easily insert the data into Milvus:
+10. Now we can easily insert the data into Milvus:
 ```python
 def insert_embeddings(file_json, embeddings_json, client=milvus_client):
     rows = []
@@ -614,7 +608,7 @@ insert_embeddings(file_json, embeddings_json)
 milvus_client.load_collection("rag_texts_and_embeddings")
 ```
 
-12. Now let's do some semantic search!
+11. Now let's do some semantic search!
 ```python
 # search
 
