@@ -276,7 +276,7 @@ else:
     print("Tensor Cores not available: float16 may be slow or unsupported.")
 ```
 
-Casting model weights and inputs to half-precision works as follows:
+Casting model weights and inputs to half-precision works as follows: (the 'model' variable is halfed here too! self.half() is equivalent to self.to(torch.float16) https://docs.pytorch.org/docs/stable/generated/torch.Tensor.half.html)
 
 ```python
 model_half = model.half().to('cuda')
@@ -302,9 +302,11 @@ print(f"Loss fp32: {loss_fp32.item()}")
 ```
 
 ```python
-model_fp16 = model_fp32.half()
-data_fp16 = data_fp32.half()
-labels_fp16 = labels_fp32.half()
+import copy
+
+model_fp16 = copy.deepcopy(model_fp32).half()
+data_fp16 = copy.deepcopy(data_fp32).half()
+labels_fp16 = copy.deepcopy(labels_fp32).half()
 
 print(f"Data type of model_fp16 parameters: {model_fp16.weight.dtype}")
 print(f"Data type of data_fp16: {data_fp16.dtype}")
