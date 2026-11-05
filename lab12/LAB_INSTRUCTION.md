@@ -45,7 +45,7 @@ file, next to `airflow/airflow.cfg`. A few key elements of that file are:
 - `sql_alchemy_conn` - connection string to the database
 - `port` - port for UI server, by default 8080
 
-Access the UI using the credentials from the file. Browse the example DAGs in the `Dags` tab, dwitch
+Access the UI using the credentials from the file. Browse the example DAGs in the `Dags` tab, switch
 to list view for more compact listing. Find `example_python_operator` DAG and trigger (run) it manually,
 (upper right corner button). After execution, switch to the graph view in the upper left corner. Code
 for this DAG is
@@ -361,7 +361,7 @@ x-airflow-common: &airflow-common
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
     - ./config:/opt/airflow/config
-    - uv-cache:/opt/airflow/.uv-cache
+    - ./.uv_cache:/opt/airflow/.uv-cache
 
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
