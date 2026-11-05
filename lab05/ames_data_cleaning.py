@@ -73,7 +73,7 @@ def replace_all_missing_values(df: pd.DataFrame) -> None:
     replace_na(df, "HalfBath", value=0)
 
     # HeatingQC : NA most likely means typical
-    replace_na(df, "HeatingQC", value="Ta")
+    replace_na(df, "HeatingQC", value="TA")
 
     # KitchenAbvGr : NA most likely means 0
     replace_na(df, "KitchenAbvGr", value=0)
@@ -227,7 +227,7 @@ def encode_categorical_columns(df: pd.DataFrame) -> pd.DataFrame:
             "Utilities": {"ELO": 1, "NoSeWa": 2, "NoSewr": 3, "AllPub": 4},
         }
     )
-    return df
+    return df.infer_objects()
 
 
 if __name__ == "__main__":

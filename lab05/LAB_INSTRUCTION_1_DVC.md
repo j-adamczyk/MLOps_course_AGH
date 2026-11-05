@@ -1,6 +1,6 @@
 # Laboratory 5 instruction part 1 - DVC
 
-## DVC introduction
+## Introduction
 
 [Data Version Control (DVC)](https://dvc.org/) is the most popular solution for
 implementing data versioning. It's tightly coupled with Git, but allows efficient
@@ -9,13 +9,18 @@ handling those large files, and only stores a small metadata file in your Git
 repository.
 
 DVC also has other features, e.g. data pipelines and experiment versioning, but
-we will focus here on the "Git for data" aspect here.
+we will focus on the "Git for data" aspect here.
 
-Start with syncing the uv
+To set up the environment, run `uv sync` and activate the virtual environment:
+
 ```bash
 uv sync
 source .venv/bin/activate
 ```
+
+If you work on Windows with WSL, keep the lab repository in the Linux filesystem (e.g. `~/mlops/lab05`),
+not under `/mnt/c/...`. On the Windows drive, `uv sync` and DVC are much slower, and the SQLite
+database used by MLflow in the second part of this lab can fail on file locking.
 
 ## Git configuration
 
@@ -25,6 +30,7 @@ inspired by typical Git commands.
 
 Create a repository on GitHub, commit, and push the provided laboratory files there.
 Using CLI is recommended, since you will need it for DVC commands:
+
 - add all files to local staging area: `git add .`
 - commit them with a given message: `git commit -m "initial commit"`
 - push changes to remote repository: `git push`
@@ -34,7 +40,7 @@ from being pushed to Git repository. It's always useful to use it, but particula
 in MLOps, where we work with large files, e.g. datasets and models. DVC will additionally
 create its own `.gitignore` files to avoid pushing large files to Git.
 
-**Warning:** we do not explicitly mention any commit names in further instructions, but
+Note that we do not explicitly mention any commit names in further instructions, but
 make sure that your commit messages are readable and your Git history is reasonably clean.
 Rename or squash commits if necessary before submitting the lab.
 
@@ -42,6 +48,7 @@ Rename or squash commits if necessary before submitting the lab.
 
 DVC is initialized in the existing Git repository by running `dvc init`, do it now.
 Message printed in the CLI should look like:
+
 ```
 Initialized DVC repository.
 
@@ -49,25 +56,26 @@ You can now commit the changes to git.
 ```
 
 This creates:
+
 - `.dvcignore` file, working similarly to `.gitignore`, e.g. for ignoring temporary
   data files
 - `.dvc` directory, managing DVC state
 
-Those file **need** to be commited to your Git repository. They are responsible for
+Those files need to be committed to your Git repository. They are responsible for
 tracking the Git-data relationship.
 
 Let's manage some data then! We will use the [Ames housing](https://www.openintro.org/book/statdata/?data=ames)
 dataset about house prices in 2006-2010 in Ames, Iowa. However, since we have the dates
 available, we have prepared a realistic data split:
+
 - data from years 2006-2008 (inclusive) is "currently available"
-- data from 2009-2010 will be gathered in the future (as part of homework)
+- data from 2009-2010 will be gathered in the future
 
 For now, download just the former one [from the Google Drive](https://drive.google.com/file/d/1_Y0LPWOTU3VnaS1t0HMDa9_G2MWtWBRp/view?usp=sharing),
 and put it in a `data` directory. You can also run:
-```commandline
+
+```bash
 mkdir -p data
-```
-```commandline
 wget \
     --no-check-certificate \
     "https://drive.google.com/uc?export=download&id=1_Y0LPWOTU3VnaS1t0HMDa9_G2MWtWBRp" \
@@ -79,11 +87,13 @@ Inspect the file by using the `ames_inspect_data.py` script. It is implemented w
 and easy to use for implementing CLI applications.
 
 Now, let's start tracking that file by adding it to DVC:
-```commandline
+
+```bash
 dvc add data/ames_data_2006_2008.parquet
 ```
 
 This created the `data/ames_data_2006_2008.parquet.dvc` file, with contents like:
+
 ```
 outs:
 - md5: 7f045b7f24d1af6daf02a075a188432d
@@ -96,43 +106,48 @@ outs:
 
 A `.dvc` file is a small metadata file that DVC creates to track your large data files. Think of it
 as a "pointer" or "reference" to your actual data. It contains:
-- **MD5 hash** - a unique fingerprint of your data file's contents
-- **Size** - the file size in bytes
-- **Path** - the relative path to the actual data file
-- It is tiny (few hundred bytes) compared to your actual data (megabytes or gigabytes)
-- It can be safely committed to Git without bloating your repository
-- It allow DVC to verify data integrity and detect changes
-- It enable version control for large files that Git cannot handle efficiently
+
+- MD5 hash - a unique fingerprint of your data file's contents
+- size - the file size in bytes
+- path - the relative path to the actual data file
+
+It is tiny (a few hundred bytes) compared to your actual data (megabytes or gigabytes), so it can
+be safely committed to Git without bloating your repository. It allows DVC to verify data integrity,
+detect changes, and enables version control for large files that Git cannot handle efficiently.
 
 The actual data file (`ames_data_2006_2008.parquet`) is:
+
 1. Stored in DVC's cache (`.dvc/cache/` directory)
 2. Added to `.gitignore` automatically by DVC
-3. Will be pushed to remote storage (like S3, Google Drive, or our local remote)
-4. **NOT committed to Git** - only the `.dvc` file is committed
+3. Pushed to remote storage (like S3, Google Drive, or our local remote)
+4. **Not** committed to Git - only the `.dvc` file is committed
 
+Small files that you commit to Git:
 
-**Commit to Git (small files):**
 - `.dvc` files - metadata pointers to your data
 - `.dvc/config` - DVC configuration (remotes, settings)
 - `.dvcignore` - files to ignore in DVC
 - `data/.gitignore` - automatically created by DVC
-- Code files (`.py`, `.ipynb`, etc.)
-- Configuration files (`pyproject.toml`, etc.)
+- code files (`.py`, `.ipynb`, etc.)
+- configuration files (`pyproject.toml`, etc.)
 
-**Track with DVC (large files):**
-- Datasets (`.parquet`, `.csv`, `.json`, etc.)
-- Trained models (`.pkl`, `.h5`, `.pth`, etc.)
-- Large binary files
-- Any file that would make your Git repository too large
+Large files that you track with DVC:
 
-**Never commit to Git:**
-- Actual data files tracked by DVC
+- datasets (`.parquet`, `.csv`, `.json`, etc.)
+- trained models (`.pkl`, `.h5`, `.pth`, etc.)
+- large binary files
+- any file that would make your Git repository too large
+
+Files that you never commit to Git:
+
+- actual data files tracked by DVC
 - `.dvc/cache/` - DVC's local cache
 - `remote_data/` - our local remote storage (in production, this would be S3/GCS)
 
 Those DVC files need to be pushed to the Git repository, synchronizing DVC data state
 with a Git commit:
-```commandline
+
+```bash
 git add .dvc data
 ```
 
@@ -145,109 +160,108 @@ Currently, Git ignores our data, and DVC tracks it locally. Now we need to creat
 but for data files.
 
 Without a remote:
-- Your data only exists on your local machine
-- Team members cannot access your data
-- If you lose your machine, you lose your data
-- You cannot share data across different environments
+
+- your data only exists on your local machine
+- team members cannot access your data
+- if you lose your machine, you lose your data
+- you cannot share data across different environments
 
 With a remote:
-- Data is backed up in a central location
-- Team members can `dvc pull` to get the data
-- You can work on different machines
-- Data is versioned and synchronized with Git commits
+
+- data is backed up in a central location
+- team members can `dvc pull` to get the data
+- you can work on different machines
+- data is versioned and synchronized with Git commits
 
 DVC supports [many different storage types](https://dvc.org/doc/user-guide/data-management/remote-storage#supported-storage-types),
 e.g. AWS S3, MinIO, GCP, anything available over SSH or SCP, or even just Google Drive.
 For simplicity, here we will configure a "local remote", i.e. just a separate directory
-on the same machine that simulates remote storage. 
+on the same machine that simulates remote storage.
 
 To add a remote, `dvc remote add REMOTE_NAME REMOTE_LOCATION` command is used, typically
-with `--default` (set as default) option. 
+with `--default` (set as default) option.
 
-```commandline
+```bash
 mkdir -p remote_data
-```
-```commandline
 dvc remote add --default local_remote remote_data
 ```
 
-**Note:** In production, you would typically use cloud storage like AWS S3, Google Cloud Storage,
+Note that in production, you would typically use cloud storage like AWS S3, Google Cloud Storage,
 or Azure Blob Storage instead of a local directory. DVC will automatically recognize the storage
 type from the URL (e.g., `s3://bucket_name/dvc_prefix` for AWS S3).
 
 To push the data to the remote storage, run:
-```commandline
+
+```bash
 dvc push
 ```
 
 Inspect the `remote_data` directory now. You can see the file there, identified by the
-MD5 checksum of its contents.
+MD5 checksum of its contents. When you ran `dvc push`, DVC:
 
-**The flow**
-1. DVC read the `.dvc` file to find the MD5 hash
-2. DVC found the actual data in its local cache (`.dvc/cache/`)
-3. DVC copied the data to the remote storage (`remote_data/`)
-4. The data is now backed up and can be shared with others
+1. Read the `.dvc` file to find the MD5 hash
+2. Found the actual data in its local cache (`.dvc/cache/`)
+3. Copied the data to the remote storage (`remote_data/`)
 
+The data is now backed up and can be shared with others.
 
-## Exercise 1
+#### Exercise 1
 
-1. Add `/remote_data` to `.gitignore`
+1. Add `/remote_data` to `.gitignore`.
 2. Make a Git commit and push it to remote. The `.dvc/config` file has changed, since
    we added a new DVC remote, and we need to track that.
-
 3. Download the [ames_description.txt file from Google Drive](https://drive.google.com/file/d/1wJkhdOAkYAiZwqDbDevFdSvkhxh8mpNS/view?usp=drive_link)
    and put it in the `data` directory. This file contains descriptions of data features
    and their possible values.
+4. Add the new file to DVC, and add the resulting `.dvc` file to Git:
 
-4. Add the new file to DVC, and add the resulting `.dvc` file to Git.
-```bash
-dvc add data/ames_description.txt
-git add data/ames_description.txt.dvc data/.gitignore
-```
+   ```bash
+   dvc add data/ames_description.txt
+   git add data/ames_description.txt.dvc data/.gitignore
+   ```
 
-4. Push the file to DVC remote repository.
+5. Push the file to DVC remote repository.
+6. Make a new Git commit and push to remote, updating the tracked DVC files status.
 
-5. Make a new Git commit and push to remote, updating the tracked DVC files status.
+---
 
 ## Adding new dataset version
 
 Now we have the raw dataset added, along with its description. Let's assume that we now
 want to work on the data cleaning, and implemented the `ames_data_cleaning.py` script.
 It's a commandline Python script, taking `--file-path` argument, cleaning and transforming
-the raw features. It will replace the input file with the cleaned one. 
+the raw features. It will replace the input file with the cleaned one.
 
-**Important:** This is a typical operation if you have big data and cannot afford to keep
-the data in all stages of transformation. However, with DVC, we can safely do this because
-we can always go back to the previous version. This showcases the usefulness of DVC versioning.
+This is a typical operation if you have big data and cannot afford to keep the data in all
+stages of transformation. However, with DVC, we can safely do this because we can always go
+back to the previous version. This showcases the usefulness of DVC versioning.
 
-## Exercise 2
+#### Exercise 2
 
 1. Run the script, replacing the raw data with the cleaned file with `ames_data_cleaning.py`.
-
 2. Inspect the resulting file with `ames_inspect_data.py` script, to ensure that it really
    changed as expected.
-
 3. Add it to DVC to update the tracked data. DVC will detect the file has changed and update
    its metadata.
-
 4. Add the resulting `.dvc` file to Git.
-
 5. Push files to DVC and Git repositories.
+
+---
 
 ## Changing dataset versions
 
 Now that we have quite a few commits and data files, we can actually use the versioning
 in practice and go back in time to the previous dataset version.
 
-**First experiment** - delete the newly replaced dataset file, and then perform `dvc checkout`.
+First, delete the newly replaced dataset file, and then perform `dvc checkout`.
 Since you have its `.dvc` file, DVC knows what file should be there, and will pull it for you.
 
 Now, go back in Git commits before you replaced the dataset with the cleaned data. To go back
-`N` commits, run `git checkout HEAD~N` (replace `N` with however many commits you need, typically 1-2). 
+`N` commits, run `git checkout HEAD~N` (replace `N` with however many commits you need, typically 1-2).
 
 Then run `dvc checkout`. It will ensure the same data state as you had at the previous commit,
 without applied changes. You should see commandline output somewhat like this:
+
 ```
 Building workspace index
 Comparing indexes
@@ -269,3 +283,11 @@ You can automate many of those parts if you want by using
 [dvc install](https://dvc.org/doc/command-reference/install), which integrates DVC tightly with
 Git by using pre-commit hooks. However, this automation does not give you full control, so there
 is a tradeoff there.
+
+The MLflow part of this lab uses the cleaned dataset, so return to the latest commit and restore
+its data before moving on:
+
+```bash
+git checkout main   # or master - check your branch name with `git branch`
+dvc checkout
+```
