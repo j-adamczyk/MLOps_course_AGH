@@ -11,12 +11,15 @@ dependencies = [
     "dvc",
     "feature-engine",
     "jupyter",
-    "mlflow",
+    "mlflow>=3",
     "numpy",
+    "optuna",
     "pandas",
     "pyarrow",
+    "pyyaml",
     "ruff",
     "scikit-learn",
+    "tabm",
     "torch",
 ]
 
