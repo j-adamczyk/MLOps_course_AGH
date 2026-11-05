@@ -564,7 +564,7 @@ async def make_llm_request(prompt: str) -> str:
     async with MCPManager(mcp_servers) as mcp:
         messages = [
             {
-                "role": "system",
+                "role": "developer",
                 "content": (
                     "You are a helpful assistant. Use tools if you need to."
                     # "If the task is impossible based on your knowledge and tools, "
