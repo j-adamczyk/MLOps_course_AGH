@@ -30,29 +30,32 @@ Instructions:
      - do your results agree with [the paper](https://aclanthology.org/2022.insights-1.19/)
        pointing out the label quality issues?
      - are the problems severe and worth fixing in your opinion?
-3. Train a small text classifier:
-   - you can use `distilbert/distilbert-base-uncased` model, or any other that you want
-   - make 80-20% train-valid split
-   - use F1-score to select the best model
-   - perform hyperparameter tuning, or use larger learning rate and train for longer than in
-     the lab, since the dataset is small and task is harder
-   - modify how `y_pred_proba` and `y_pred` are returned to accommodate multiclass classification,
-     `np.argmax()` may be useful
+3. Use the basal decision model from the lab as a zero-shot intent classifier:
+   - use the 77 intents as options, with readable names, e.g. "card arrival" instead of `card_arrival`
+     (names are in `dataset.features["label"].names`)
+   - a question with k options uses the first k option codes from section 3.6 of the
+     [prompt format](https://github.com/rkinas/basal/blob/main/docs/FORMAT2.md); check that each code
+     is a single token at the answer position, like in the lab
+   - use the temperature for 77 options (`"27-255"` bucket of `"choice"` in `CALIBRATION.json`)
+   - prompts are much longer than in the lab, so use a sample of the test set, e.g. 500 queries
 4. Test the resulting model:
    - check a few quality metrics
    - for multiclass metrics, use `average="macro"` (non-AUROC) or `multi_class="ovo"` (AUROC)
    - plot the F1-score for each class
+   - check the calibration with the multiclass version of ECE (confidence of the predicted class vs
+     accuracy)
    - comment:
-     - is the overall F1-score comparable with the papers?
+     - is the overall F1-score comparable with fine-tuned models from the papers?
      - is it high enough from your perspective?
-     - are there significant differences between classes?
-5. Use Giskard for behavioral testing:
-   - modify `prediction_function()` appropriately
-   - HuggingFace pipeline has `top_k=None` option to get scores for all labels, not just the label
-     with the highest probability
-   - analyze the results, are there any additional problems with the resulting classifier?
+     - are there significant differences between classes? Do the worst classes have unclear names?
+5. Use LangTest for behavioral testing:
+   - make the model wrapper return intent names, and save the test data with intent names instead of
+     numbers, like in the lab
+   - use the robustness tests from the lab, and add at least 2 more that make sense for this task
+   - analyze the results, are there any additional problems with the classifier?
 6. Use Captum for local explainability:
-   - modify the `explain_text` function from the lab to accommodate multiclass classification
+   - modify the `explain_text()` function from the lab to accommodate multiclass classification,
+     e.g. use the predicted class as the `target`
    - explain predictions for a few samples from a test set
    - comment, is the model focusing on the right parts of texts?
 
