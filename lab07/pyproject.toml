@@ -1,23 +1,19 @@
 [project]
 name = "MLOps_course_AGH_lab_07"
 version = "1.0.0"
+description = ""
 readme = "README.md"
-requires-python = ">=3.11"
+
+requires-python = "==3.12.*"
 
 dependencies = [
+    "jupyter",
     "numpy",
-    "onnx",
-    "onnxruntime",     
-    "torch",
-    "transformers",
+    "onnx>=1.23",
+    "onnxruntime>=1.32",
+    # the ONNX exporter in PyTorch builds the graph with onnxscript
+    "onnxscript>=0.7",
+    "ruff",
+    "torch>=2.15",
+    "transformers>=5.5",
 ]
-
-[tool.uv.sources]
-torch = [
-    { index = "pytorch-cu121", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }
-]
-
-[[tool.uv.index]]
-name = "pytorch-cu121"
-url = "https://download.pytorch.org/whl/cu121"
-explicit = true
