@@ -1,35 +1,48 @@
-## Lab 7 - model optimization for inference
+# Lab 7 - model optimization for inference
 
-This lab focuses on optimizing machine learning models for inference. After training,
-models need to be optimized to reduce latency, memory usage, and computational costs
-in production environments. We will explore various PyTorch optimization techniques
-and conversion to ONNX format for efficient deployment.
+This lab concerns optimizing models for inference: making them faster, smaller and cheaper to run in
+production. We measure and profile first, and then optimize: compilation, ONNX Runtime, quantization, and,
+for language models, the KV cache.
 
-Proper optimization can reduce inference time by 2-10 times, significantly lowering
-infrastructure costs and improving user experience in production ML systems.
-
-**Learning Plan**
-1. PyTorch inference best practices (eval mode, no_grad).
-2. torch.compile() for automatic optimization.
-3. Model quantization
-4. GPU optimization strategies & CUDA 
-5. ONNX format for cross-platform deployment
+**Learning plan**
+1. Measuring inference performance:
+   - latency (p50, p95) and throughput, warmup and synchronization
+   - evaluation mode, `no_grad()` and `inference_mode()`
+   - profiling with `torch.profiler` and Perfetto, padding waste
+2. Model compilation with `torch.compile`, recompilations and dynamic shapes
+3. ONNX and ONNX Runtime:
+   - export with `torch.onnx.export`, dynamic shapes
+   - graph optimizations, online and offline
+   - execution providers and device selection policies
+   - dynamic int8 quantization and its quality
+4. Small language models:
+   - prefill and decode, TTFT, TPOT, tokens/s
+   - KV cache, static cache with `torch.compile`
+5. GPU inference (optional): lower precision, CUDA Graphs, pinned memory
 
 **Necessary software**
-- [Docker and Docker Compose](https://docs.docker.com/engine/install/), 
-  also [see those post-installation notes](https://docs.docker.com/engine/install/linux-postinstall/)
-- [uv](https://docs.astral.sh/uv/getting-started/installation/) for dependency management
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Docker](https://docs.docker.com/engine/install/) for the homework
+
+Note that you should also activate `uv` project and install dependencies with `uv sync`.
+The main part of the lab runs on CPU. Some exercises also use an NVIDIA GPU (CUDA) or an Apple Silicon GPU
+(MPS), and the GPU section is optional.
 
 **Lab**
 
-See [lab instruction](LAB_INSTRUCTION.md).
+See [lab instruction](LAB_INSTRUCTION.ipynb), also available as [Markdown](LAB_INSTRUCTION.md).
 
-There is no homework, only lab this time :)
+**Homework**
 
-**Additional Resources**
-- [PyTorch Performance Tuning Guide](https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html)
-- [Hugging Face Optimization Rush](https://huggingface.co/blog/Isayoften/optimization-rush)
-- [ML Compilers and Optimizers Introduction](https://huyenchip.com/2021/09/07/a-friendly-introduction-to-machine-learning-compilers-and-optimizers.html)
-- [ONNX Docs](https://onnxruntime.ai/docs/)
-- [ONNX Graph Optimizations](https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html)
-- [ONNX Execution Providers](https://iot-robotics.github.io/ONNXRuntime/docs/execution-providers/)
+See [homework instruction](HOMEWORK.md).
+
+**Models**
+
+In the lab, we will be using the [multi-qa-mpnet-base-cos-v1](https://huggingface.co/sentence-transformers/multi-qa-mpnet-base-cos-v1)
+sentence embedding model and the [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) language model.
+
+**Additional resources**
+- [PyTorch performance tuning guide](https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html)
+- [A friendly introduction to machine learning compilers and optimizers](https://huyenchip.com/2021/09/07/a-friendly-introduction-to-machine-learning-compilers-and-optimizers.html)
+- [ONNX Runtime documentation](https://onnxruntime.ai/docs/)
+- [Optimizing LLM inference in transformers](https://huggingface.co/docs/transformers/llm_optims)

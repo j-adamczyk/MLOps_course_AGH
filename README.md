@@ -14,7 +14,7 @@ This course covers essential MLOps concepts and practices, from development to d
 4. [Vector databases](lab04) - pgvectorscale, SQLAlchemy, Milvus
 5. [Versioning](lab05) - DVC, MLFlow
 6. [ML testing & data-centric AI](lab06) - Pandera, CleanLab, basal decision model, LangTest, Captum
-7. [Model optimization for inference](lab07) - PyTorch optimization, ONNX, ONNX Runtime
+7. [Model optimization for inference](lab07) - torch.profiler, torch.compile, ONNX Runtime, quantization, KV cache
 8. [Monitoring & drift detection](lab08) - Evidently, NannyML
 9. [Introduction to cloud computing](lab09) - AWS services
 10. [Infrastructure as Code (IaC)](lab10) - Terraform
