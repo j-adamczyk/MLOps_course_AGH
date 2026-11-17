@@ -942,4 +942,4 @@ explain_text("The choice at breakfast was great but the food area was a bit cram
 ## Lab assessment
 
 Fill the code exercises in the Jupyter notebook, and send it with completed exercises and written comments
-in Markdown cells (particularly for exercises 3, 4, 5 and 6).
+in Markdown cells (particularly for exercises 3, 4, 5 and 6). Exercises 1-6 are worth 1 point each.

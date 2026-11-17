@@ -30,10 +30,11 @@ The decision model (1.6B parameters) runs on an NVIDIA GPU, on Apple Silicon, or
 **Lab**
 
 See [lab instruction](LAB_INSTRUCTION.ipynb), also available as [Markdown](LAB_INSTRUCTION.md).
+Laboratory is worth 6 points.
 
 **Homework**
 
-See [homework instruction](HOMEWORK.md).
+See [homework instruction](HOMEWORK.md). Homework is worth 10 points.
 
 **Data**
 

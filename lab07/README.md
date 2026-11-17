@@ -18,7 +18,9 @@ for language models, the KV cache.
 4. Small language models:
    - prefill and decode, TTFT, TPOT, tokens/s
    - KV cache, static cache with `torch.compile`
-5. GPU inference (optional): lower precision, CUDA Graphs, pinned memory
+5. GPU inference (optional):
+   - lower precision
+   - CUDA Graphs, pinned memory
 
 **Necessary software**
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
@@ -31,10 +33,11 @@ The main part of the lab runs on CPU. Some exercises also use an NVIDIA GPU (CUD
 **Lab**
 
 See [lab instruction](LAB_INSTRUCTION.ipynb), also available as [Markdown](LAB_INSTRUCTION.md).
+Laboratory is worth 5 points.
 
 **Homework**
 
-See [homework instruction](HOMEWORK.md).
+See [homework instruction](HOMEWORK.md). Homework is worth 10 points.
 
 **Models**
 

@@ -4,13 +4,13 @@ This lab concerns LLMOps, operationalizing LLMs for inference. We will cover
 efficient inference, tool usage, and securing LLMs with guardrails.
 
 **Learning plan**
-1. Efficient LLM inference
+1. Efficient LLM inference:
    - traditional HuggingFace inference
    - vLLM
-2. Tool usage
+2. Tool usage:
    - manual function calling
    - Model Context Protocol (MCP)
-3. LLM security
+3. LLM security:
    - guardrails
    - Guardrails AI framework
 
