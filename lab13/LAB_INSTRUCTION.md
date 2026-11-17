@@ -809,3 +809,10 @@ Add guardrails to our fishing fanatic LLM:
 - [detect jailbreak](https://guardrailsai.com/hub/validator/guardrails/detect_jailbreak)
 
 Try to omit the security and get a non-fish response.
+
+---
+
+## Lab assessment
+
+Send the code of all exercises, with your answers and comments in a short Markdown report. Note which variant
+of the lab you used. Exercises 1-5 are worth 1 point each.
