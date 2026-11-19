@@ -826,6 +826,11 @@ print(measure_generation(cache_implementation="static", disable_compile=True))
 On an Apple M1 Pro GPU, the static cache with compilation generates about 110 tokens/s, against about 78
 tokens/s with `DynamicCache`.
 
+Note that a static cache reserves memory for the maximum length of every sequence. For a single user this is
+fine, but a server that keeps one cache per request quickly runs out of memory. LLM servers like
+[vLLM](https://docs.vllm.ai/en/stable/) split the cache into small blocks and give them to requests as they
+grow (PagedAttention), which is the topic of the [LLMOps lab](../lab13/LAB_INSTRUCTION.md).
+
 #### Exercise 5 (1 point)
 
 1. Reload the model, so that it is not compiled, and measure TTFT, TPOT and tokens/s for 64 new tokens
