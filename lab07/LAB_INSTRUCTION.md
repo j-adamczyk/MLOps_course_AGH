@@ -15,13 +15,6 @@ it with `torch.compile`, export it to ONNX, run it with ONNX Runtime and quantiz
 small language model, [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B), and see why text generation is
 slow and what the KV cache does about it. Serving LLMs at scale is the topic of a later lab.
 
-To set up the environment, run `uv sync` and activate the virtual environment:
-
-```bash
-uv sync
-source .venv/bin/activate
-```
-
 On Linux, PyTorch from PyPI includes CUDA libraries, so the first `uv sync` downloads a few GB. The models
 take about 1.7 GB of disk space. The main part of the lab runs on CPU, so any laptop works. Some exercises
 also use a GPU if there is one: an NVIDIA GPU (CUDA) or an Apple Silicon GPU (MPS). The last section, GPU

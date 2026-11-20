@@ -24,7 +24,6 @@ for language models, the KV cache.
 
 **Necessary software**
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
-- [Docker](https://docs.docker.com/engine/install/) for the homework
 
 Note that you should also activate `uv` project and install dependencies with `uv sync`.
 The main part of the lab runs on CPU. Some exercises also use an NVIDIA GPU (CUDA) or an Apple Silicon GPU
@@ -37,7 +36,7 @@ Laboratory is worth 5 points.
 
 **Homework**
 
-See [homework instruction](HOMEWORK.md). Homework is worth 10 points.
+There is no homework for this lab.
 
 **Models**
 
